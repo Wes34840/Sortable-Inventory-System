@@ -4,10 +4,6 @@ public class IItem
 {
     public Sprite sprite;
     public string name, description;
-    public bool isStackable, isValid;
+    public bool isStackable;
     public int count;
-    public IItem(bool isValid = true)
-    {
-        this.isValid = isValid;
-    }
 }

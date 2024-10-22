@@ -9,12 +9,11 @@ public class PlayerInventory : MonoBehaviour
     public int inventorySize = 17;
     public int maxInventoryWidth = 6;
 
-    public delegate bool PickUpItemDelegate(IItem item);
-    public static PickUpItemDelegate pickUpItem;
+    public static Func<IItem, bool> pickUpItem;
 
     private void Start()
     {
-        pickUpItem = PickUpItem;
+        pickUpItem += PickUpItem;
         inventory = new IItem[inventorySize];
         StartCoroutine(WaitUntilEndOfFrame());
     }
@@ -27,30 +26,46 @@ public class PlayerInventory : MonoBehaviour
 
     public bool PickUpItem(IItem item)
     {
-        InventoryPanel panel = null;
-
-        for (int i = 0; i < inventory.Length; i++)
+        // Check item if it's stackable
+        if (item.isStackable)
         {
-
-            if (inventory.Contains(item))
+            // If true check inventory if an item of the same type is already in the inventory 
+            if (Array.Exists(inventory, i => i?.GetType() == item.GetType()))
             {
-                panel = InventoryVisualiser.AccessInventoryPanel(Array.IndexOf(inventory, item));
+                // If true, find panel for item and add onto it
+                int itemIndex = Array.IndexOf(inventory, item);
+
+                inventory[itemIndex].count += item.count;
+                InventoryVisualiser.AccessInventoryPanel(itemIndex).UpdateDisplay();
+                return true;
+            }
+
+        }
+        // if false, check inventory for the nearest empty panel
+        int firstEmptySlot = 0;
+
+        // If all spaces are already taken, return false
+        for (int i = 0; i <= inventory.Count(); i++)
+        {
+            // If there's a single null 
+            if (inventory[i] == null)
+            {
+                firstEmptySlot = i;
                 break;
+            }
+
+            // If no slot is available
+            if (i == inventory.Count() - 1)
+            {
+                return false;
             }
 
         }
 
-        if (panel == null || !item.isStackable)
-        {
-            if (inventory.Contains(null)) return false;
-            int index = Array.FindIndex(inventory, i => !i.isValid);
-            inventory[index] = item;
-            InventoryVisualiser.AccessInventoryPanel(index).SetItem(inventory[index]);
-            return true;
-        }
-        panel.AddItem(item.count);
+        // Otherwise, assign the item to the first open slot
+        inventory[firstEmptySlot] = item;
+        InventoryVisualiser.AccessInventoryPanel(firstEmptySlot).SetItem(item);
         return true;
     }
-
 
 }

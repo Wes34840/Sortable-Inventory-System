@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class ItemWood : IItem
 {
-    public ItemWood()
+    public ItemWood(int count = 1)
     {
-        sprite = Resources.Load<Sprite>("Sprites/LumberIcon.png");
+        sprite = Resources.Load<Sprite>("Sprites/LumberIcon");
         name = "wood";
-        description = "LUMBER";
+        description = "Lorem Ipsum";
         isStackable = true;
+        this.count = count;
     }
 }

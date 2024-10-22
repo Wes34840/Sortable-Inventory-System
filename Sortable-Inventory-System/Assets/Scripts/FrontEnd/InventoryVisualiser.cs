@@ -50,6 +50,7 @@ public class InventoryVisualiser : MonoBehaviour
         canvasGroup.blocksRaycasts = isOpen;
     }
 
+
     public static InventoryPanel AccessInventoryPanel(int index)
     {
         return panels[index];

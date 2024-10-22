@@ -10,10 +10,8 @@ public class ItemWhale : MonoBehaviour
             bool isValid = PlayerInventory.pickUpItem(new ItemWood());
             if (isValid)
             {
-                Debug.Log("finished");
                 return;
             }
-            Debug.Log("Invalid");
         }
     }
     public void AddItemRock(InputAction.CallbackContext ctx)
@@ -23,10 +21,8 @@ public class ItemWhale : MonoBehaviour
             bool isValid = PlayerInventory.pickUpItem(new ItemRock());
             if (isValid)
             {
-                Debug.Log("finished");
                 return;
             }
-            Debug.Log("Invalid");
         }
     }
 }
